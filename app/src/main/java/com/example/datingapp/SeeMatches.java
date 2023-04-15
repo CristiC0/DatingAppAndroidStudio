@@ -8,10 +8,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.example.datingapp.Match.MatchesAdapter;
 
 public class SeeMatches extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -34,7 +32,6 @@ public class SeeMatches extends AppCompatActivity {
             }
         });
 
-        DatabaseHelper dh=new DatabaseHelper(this);
 
         recyclerView=(RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setNestedScrollingEnabled(false);

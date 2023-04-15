@@ -6,27 +6,27 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.Toast;
 
+import com.example.datingapp.Match.Match;
+import com.example.datingapp.auth.ChooseLoginOrRegistration;
+import com.example.datingapp.auth.CurrentUser;
+import com.example.datingapp.auth.Settings;
+import com.example.datingapp.auth.User;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ListAdapter listAdapter;
+    private SeeMatchesAdapter seeMatchesAdapter;
     List<Match> cards;
     Button goToMatches;
     private ImageView back;
-
+    private ImageView settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 CurrentUser.getInstance().setUser(null);
-                Intent intent=new Intent(MainActivity.this,ChooseLoginOrRegistration.class);
+                Intent intent=new Intent(MainActivity.this, ChooseLoginOrRegistration.class);
+                startActivity(intent);
+                finish();
+                return;
+            }
+        });
+
+        settings=(ImageView)findViewById(R.id.setting);
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainActivity.this, Settings.class);
                 startActivity(intent);
                 finish();
                 return;
@@ -61,17 +72,19 @@ public class MainActivity extends AppCompatActivity {
         String searchedGenre=CurrentUser.getInstance().getUser().getGender().equals("Male")?
                 "Female":"Male";
         cards=databaseHelper.getListOfMatches(searchedGenre);
+        cards= cards.stream().filter(c-> !databaseHelper.existsSwipe(new Swipe(CurrentUser.getInstance().getUser().getId(),c.getId()))).collect(Collectors.toList());
+        Log.d("asd",cards.toString());
         databaseHelper.close();
 
-        listAdapter=new ListAdapter(this,R.layout.item,cards);
+        seeMatchesAdapter=new SeeMatchesAdapter(this,R.layout.item,cards);
         SwipeFlingAdapterView flingContainer=(SwipeFlingAdapterView)findViewById(R.id.frame);
 
-        flingContainer.setAdapter(listAdapter);
+        flingContainer.setAdapter(seeMatchesAdapter);
         flingContainer.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
             @Override
             public void removeFirstObjectInAdapter() {
                 cards.remove(0);
-                listAdapter.notifyDataSetChanged();
+                seeMatchesAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -86,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAdapterAboutToEmpty(int itemsInAdapter) {
                 cards.add(new Match("No matches left! ","https://st3.depositphotos.com/5266903/15718/v/450/depositphotos_157186616-stock-illustration-unknown-person-flat-vector-icon.jpg",null) );
-                listAdapter.notifyDataSetChanged();
+                seeMatchesAdapter.notifyDataSetChanged();
             }
 
             @Override

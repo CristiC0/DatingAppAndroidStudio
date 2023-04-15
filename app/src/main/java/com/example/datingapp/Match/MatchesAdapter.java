@@ -1,14 +1,17 @@
-package com.example.datingapp;
+package com.example.datingapp.Match;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.datingapp.DatabaseHelper;
+import com.example.datingapp.R;
+import com.example.datingapp.Swipe;
+import com.example.datingapp.auth.CurrentUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +45,16 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesViewHolders> {
     public void onBindViewHolder(MatchesViewHolders holder, int position) {
         holder.matchName.setText(matchesList.get(position).getName());
         Glide.with( holder.matchName.getContext()).load(matchesList.get(position).getImage()).into(holder.matchImage);
-//        holder.matchImage.setImageResource(matchesList.get(position).getName());
+        holder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatabaseHelper dh=new DatabaseHelper(context);
+                dh.deleteSwipe(matchesList.get(position).getId());
+                ViewGroup.LayoutParams params= holder.match.getLayoutParams();
+                params.height=0;
+                holder.match.setLayoutParams(params);
+            }
+        });
     }
 
     @Override

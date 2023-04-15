@@ -1,4 +1,4 @@
-package com.example.datingapp;
+package com.example.datingapp.auth;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,6 +9,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.example.datingapp.DatabaseHelper;
+import com.example.datingapp.MainActivity;
+import com.example.datingapp.R;
 
 public class LoginActivity extends AppCompatActivity {
 

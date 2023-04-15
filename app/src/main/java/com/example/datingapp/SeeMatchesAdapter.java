@@ -8,11 +8,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.datingapp.Match.Match;
+import com.example.datingapp.R;
 
 import java.util.List;
 
-public class ListAdapter extends android.widget.ArrayAdapter<Match> {
-    public ListAdapter(Context context, int resource, List<Match> matches) {
+public class SeeMatchesAdapter extends android.widget.ArrayAdapter<Match> {
+    public SeeMatchesAdapter(Context context, int resource, List<Match> matches) {
         super(context, resource,matches);
     }
 

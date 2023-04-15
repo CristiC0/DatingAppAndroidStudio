@@ -1,4 +1,4 @@
-package com.example.datingapp;
+package com.example.datingapp.auth;
 
 public class User {
     private int id;

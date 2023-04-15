@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".auth.RegistrationActivity"
+    tools:context=".auth.Settings"
     android:orientation="vertical">
 
     <LinearLayout
@@ -23,7 +23,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Password"
-            android:inputType="textPassword"
             android:id="@+id/password"/>
 
         <RadioGroup
@@ -36,24 +35,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Male"
+                android:id="@+id/m"
                 />
 
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Female"
+                android:id="@+id/f"
                 />
 
 
         </RadioGroup>
 
-
-
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Register"
-            android:id="@+id/register" />
+            android:text="Submit"
+            android:id="@+id/submit" />
 
     </LinearLayout>
 

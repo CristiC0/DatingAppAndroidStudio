@@ -1,4 +1,4 @@
-package com.example.datingapp;
+package com.example.datingapp.Match;
 
 public class Match {
     private int id;

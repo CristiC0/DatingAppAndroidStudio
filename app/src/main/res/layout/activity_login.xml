@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegistrationActivity"
+    tools:context=".auth.RegistrationActivity"
     android:orientation="vertical">
 
 
@@ -25,7 +25,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Password"
-            android:id="@+id/password"/>
+            android:id="@+id/password"
+            android:inputType="textPassword"
+            />
 
         <Button
             android:layout_width="match_parent"

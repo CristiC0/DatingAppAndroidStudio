@@ -9,9 +9,12 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.example.datingapp.Match.Match;
+import com.example.datingapp.auth.CurrentUser;
+import com.example.datingapp.auth.User;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     final String USER_TABLE="USERS";
@@ -42,7 +45,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String createMatchesTableStatement="CREATE TABLE "+MATCHES_TABLE+" ( "+MATCHES_ID_COLUMN+ " INTEGER PRIMARY KEY AUTOINCREMENT, "+MATCHES_USERNAME_COLUMN+" TEXT, " + MATCHES_IMAGE_COLUMN+" TEXT, "+MATCHES_GENDER_COLUMN+" TEXT)";
         String createSwipesTableStatement="CREATE TABLE "+SWIPES_TABLE+" ( "+SWIPES_ID_COLUMN+ " INTEGER PRIMARY KEY AUTOINCREMENT, "+SWIPES_FROM_COLUMN+" INTEGER, " + SWIPES_TO_COLUMN+" INTEGER)";
 
-
         db.execSQL(createUserTableStatement);
         db.execSQL(createMatchesTableStatement);
         db.execSQL(createSwipesTableStatement);
@@ -69,25 +71,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public boolean existsUser(User user){
-        List<User> allUsers=getListOfUsers();
-        for (User u: allUsers) {
-            if(u.getUsername().equals(user.getUsername()) && u.getPassword().equals(user.getPassword())) {
-                CurrentUser.getInstance().setUser(u);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean existsSwipe(Swipe swipe){
-        List<Swipe> allSwipes=getListOfSwipes(CurrentUser.getInstance().getUser().getId());
-        for (Swipe s: allSwipes) {
-            if(s.getFrom()==swipe.getFrom() && s.getTo()==swipe.getTo() ) {
-                return true;
-            }
-        }
-        return false;
+    public void updateUser(User newUser){
+        SQLiteDatabase db=this.getWritableDatabase();
+        String updateQuery="UPDATE "+USER_TABLE+" SET "+USER_USERNAME_COLUMN+"='"+newUser.getUsername()+"', "+USER_PASSWORD_COLUMN+"='"+newUser.getPassword()+"', "+USER_GENDER_COLUMN+"='"+newUser.getGender()+"' WHERE "+USER_ID_COLUMN+"= "+CurrentUser.getInstance().getUser().getId();
+        db.execSQL(updateQuery);
     }
 
     public List<User> getListOfUsers(){
@@ -114,15 +101,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return resultList;
     }
 
+    public boolean existsUser(User user){
+        List<User> allUsers=getListOfUsers();
+        for (User u: allUsers) {
+            if(u.getUsername().equals(user.getUsername()) && u.getPassword().equals(user.getPassword())) {
+                CurrentUser.getInstance().setUser(u);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean existsSwipe(Swipe swipe){
+        List<Swipe> allSwipes=getListOfSwipes(CurrentUser.getInstance().getUser().getId());
+        for (Swipe s: allSwipes) {
+            if(s.getFrom()==swipe.getFrom() && s.getTo()==swipe.getTo() ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     public boolean createSwipe(Swipe swipe){
         SQLiteDatabase db=this.getWritableDatabase();
         ContentValues cv=new ContentValues();
 
         cv.put(SWIPES_FROM_COLUMN,swipe.getFrom());
         cv.put(SWIPES_TO_COLUMN,swipe.getTo());
-//        Log.d("as",swipe.getFrom()+" "+swipe.getTo());
         if(existsSwipe(swipe)){
-//            db.close();
             return false;}
         long insert=db.insert(SWIPES_TABLE,null,cv);
         if(insert==-1){
@@ -130,6 +137,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return true;
     }
+
+    public void deleteSwipe(int id){
+        SQLiteDatabase db=this.getWritableDatabase();
+        String deleteQuery="DELETE FROM "+SWIPES_TABLE+" WHERE "+SWIPES_FROM_COLUMN+"="+CurrentUser.getInstance().getUser().getId()+" AND "+SWIPES_TO_COLUMN+"="+id;
+        db.execSQL(deleteQuery);
+    }
+
+    public List<Swipe> getListOfSwipes(int userId){
+        List<Swipe> resultList=new ArrayList<>();
+
+        String queryList="SELECT * FROM " + SWIPES_TABLE+" WHERE "+SWIPES_FROM_COLUMN +"="+userId+"";
+        SQLiteDatabase db=this.getReadableDatabase();
+
+        Cursor cursor=db.rawQuery(queryList,null);
+
+        if(cursor.moveToFirst()){
+            do {
+                int swipeID=cursor.getInt(0);
+                int swipeFrom=cursor.getInt(1);
+                int swipeTo=cursor.getInt(2);
+
+                Swipe newSwipe=new Swipe(swipeID,swipeFrom,swipeTo);
+                resultList.add(newSwipe);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+
+        return resultList;
+    }
+
 
     public List<Match> getListOfMatches(String searchedGenre){
         List<Match> resultList=new ArrayList<>();
@@ -159,8 +197,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-//        db.close();
-
         return resultList;
     }
 
@@ -170,37 +206,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Log.d("matchID",matchID+"");
         for (Match m:matches) {
             if(m.getId()==matchID) {
-                Log.d("match",m.toString());
                 return m;
             }
         }
         return null;
     }
 
-    public List<Swipe> getListOfSwipes(int userId){
-        List<Swipe> resultList=new ArrayList<>();
-
-        String queryList="SELECT * FROM " + SWIPES_TABLE+" WHERE "+SWIPES_FROM_COLUMN +"="+userId+"";
-        SQLiteDatabase db=this.getReadableDatabase();
-
-        Cursor cursor=db.rawQuery(queryList,null);
-
-        if(cursor.moveToFirst()){
-            do {
-                int swipeID=cursor.getInt(0);
-                int swipeFrom=cursor.getInt(1);
-                int swipeTo=cursor.getInt(2);
-
-                Swipe newSwipe=new Swipe(swipeID,swipeFrom,swipeTo);
-                resultList.add(newSwipe);
-            } while (cursor.moveToNext());
-        }
-
-        cursor.close();
-//        db.close();
-
-        return resultList;
-    }
 
     private void addDefaultMatches(SQLiteDatabase db){
         ArrayList<Match> defaultMatches=new ArrayList<>();

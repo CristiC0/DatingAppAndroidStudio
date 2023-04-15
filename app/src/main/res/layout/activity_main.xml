@@ -34,11 +34,28 @@
         tools:layout_editor_absoluteX="-72dp"
         tools:layout_editor_absoluteY="208dp" />
 
-    <ImageView
-        android:id="@+id/back"
-        android:layout_width="80sp"
-        android:layout_height="80sp"
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:src="@mipmap/back" />
+        >
+
+        <ImageView
+            android:id="@+id/setting"
+            android:layout_width="80sp"
+            android:layout_height="80sp"
+            android:padding="10dp"
+            android:src="@mipmap/settings_round" />
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="80sp"
+            android:layout_height="80sp"
+            android:src="@mipmap/back"
+            android:layout_toRightOf="@+id/setting"/>
+
+
+    </RelativeLayout>
+
 
 </FrameLayout>
