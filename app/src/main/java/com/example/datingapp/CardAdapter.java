@@ -9,12 +9,11 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.datingapp.Match.Match;
-import com.example.datingapp.R;
 
 import java.util.List;
 
-public class SeeMatchesAdapter extends android.widget.ArrayAdapter<Match> {
-    public SeeMatchesAdapter(Context context, int resource, List<Match> matches) {
+public class CardAdapter extends android.widget.ArrayAdapter<Match> {
+    public CardAdapter(Context context, int resource, List<Match> matches) {
         super(context, resource,matches);
     }
 

@@ -66,7 +66,7 @@ public class Settings extends AppCompatActivity {
             @Override
             public void onClick(View v) {
               DatabaseHelper dh=new DatabaseHelper(Settings.this);
-              User newUser=new User(username.getText().toString(),password.getText().toString(),selectedRadio.getText().toString());
+              User newUser=new User( CurrentUser.getInstance().getUser().getId(), username.getText().toString(),password.getText().toString(),selectedRadio.getText().toString());
               dh.updateUser(newUser);
               CurrentUser.getInstance().setUser(newUser);
                 Intent intent=new Intent(Settings.this,MainActivity.class);

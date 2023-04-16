@@ -202,8 +202,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public Match getMatch(int matchID){
         List<Match> matches=getListOfMatches(null);
-        Log.d("as",matches.toString());
-        Log.d("matchID",matchID+"");
         for (Match m:matches) {
             if(m.getId()==matchID) {
                 return m;

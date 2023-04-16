@@ -4,17 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.example.datingapp.Match.Match;
 import com.example.datingapp.auth.ChooseLoginOrRegistration;
 import com.example.datingapp.auth.CurrentUser;
 import com.example.datingapp.auth.Settings;
-import com.example.datingapp.auth.User;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
 import java.util.List;
@@ -22,7 +19,7 @@ import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity {
 
-    private SeeMatchesAdapter seeMatchesAdapter;
+    private CardAdapter seeMatchesAdapter;
     List<Match> cards;
     Button goToMatches;
     private ImageView back;
@@ -73,10 +70,9 @@ public class MainActivity extends AppCompatActivity {
                 "Female":"Male";
         cards=databaseHelper.getListOfMatches(searchedGenre);
         cards= cards.stream().filter(c-> !databaseHelper.existsSwipe(new Swipe(CurrentUser.getInstance().getUser().getId(),c.getId()))).collect(Collectors.toList());
-        Log.d("asd",cards.toString());
         databaseHelper.close();
 
-        seeMatchesAdapter=new SeeMatchesAdapter(this,R.layout.item,cards);
+        seeMatchesAdapter=new CardAdapter(this,R.layout.item,cards);
         SwipeFlingAdapterView flingContainer=(SwipeFlingAdapterView)findViewById(R.id.frame);
 
         flingContainer.setAdapter(seeMatchesAdapter);

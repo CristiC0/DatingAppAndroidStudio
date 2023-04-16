@@ -49,14 +49,12 @@ public class RegistrationActivity extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int selectId=gender.getCheckedRadioButtonId();
-                final RadioButton radioButton=(RadioButton) findViewById(selectId);
-                if(radioButton.getText()==null){
+                if(rb.getText()==null){
                     Toast.makeText(RegistrationActivity.this, "Select your gender", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                final String sGender=radioButton.getText().toString();
+                final String sGender=rb.getText().toString();
                 final String sUsername=username.getText().toString();
                 final String sPassword=password.getText().toString();
 
